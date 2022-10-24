@@ -7,7 +7,7 @@
       <thead class="table-light">
         <tr>
           <th scope="col">ID</th>
-          <th scope="col">Name</th>
+          <th scope="col">Nome</th>
           <th scope="col">Email</th>
           <th scope="col">Cpf</th>
           <th scope="col">Telefone</th>
@@ -18,7 +18,7 @@
       <tbody>
         <tr v-for="item in info" :key="item.id">
           <th scope="row">{{ item.id }}</th>
-          <td>{{ item.name }}</td>
+          <td>{{ item.firstName }} {{item.lastName}}</td>
           <td>{{ item.email }}</td>
           <td>{{item.cpf}}</td>
           <td>{{item.phoneNumber}}</td>
