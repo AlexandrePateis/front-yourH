@@ -1,4 +1,5 @@
 <template>
+  <ViewLoading :isLoading="loaded" />
   <div>
     <div class="actions-req">
       <router-link to="/new_client" class="btn btn-primary">Novo hospede</router-link >
@@ -11,7 +12,7 @@
           <th scope="col">Email</th>
           <th scope="col">Cpf</th>
           <th scope="col">Telefone</th>
-          <th scope="col">Data nascimento</th>
+          <th scope="col">Cidade</th>
           <th scope="col" class="col-1">Actions</th>
         </tr>
       </thead>
@@ -22,7 +23,7 @@
           <td>{{ item.email }}</td>
           <td>{{item.cpf}}</td>
           <td>{{item.phoneNumber}}</td>
-          <td>{{item.birthDate}}</td>
+          <td>{{item.city}} - {{item.state}}</td>
           <td>
             <div class="btn-options">
               <button class="btn btn-primary" @click="EditAction(item.id)">
@@ -95,11 +96,13 @@
 
 <script>
 import axios from "axios";
+import ViewLoading from '../components/ViewLoading.vue'
 export default {
   name: 'ViewClient',
   data(){
     return{
       info: null,
+      loaded: null,
     };
   },
   mounted(){
@@ -111,10 +114,30 @@ export default {
     .then((response) => {
       this.info = response.data;
       console.log(this.info);
+      this.loaded = false;
     })
     
   },
-  components: {},
+  methods:{
+    EditAction(id){
+      this.$router.push({ name: "edit", params: { id: id } });
+    },
+    DeletUser(id){
+      axios
+        .delete(`https://localhost:7284/client/${id}`, {
+          headers: {
+            Authorization: 'Access-Control-Allow-Origin',
+          },
+        })
+        .then((response) => {
+          this.info = response.data;
+          window.location.reload();
+        });
+    }
+  },
+  components: {
+    ViewLoading,
+  },
 }
 </script>
 
@@ -138,6 +161,6 @@ export default {
   gap:4px;
 }
 .btn{
-  font-size: 10px !important;
+  font-size: 14px !important;
 }
 </style>

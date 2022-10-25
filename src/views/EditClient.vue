@@ -1,12 +1,12 @@
 <template>
   <div class="">
-    <h1 class="title">Cadastro de novo hospede</h1>
+    <h1 class="title">Atualização cadastral</h1>
     <MessageConfirm :msg="msg" v-show="msg" />
     <form class="row g-3 needs-validation" novalidate>
       <div class="col-md-4">
         <label for="validationCustom01" class="form-label">Nome</label>
         <input
-          v-model="formDate.FirstName"
+          v-model="formDate.firstName"
           type="text"
           class="form-control"
           id="validationCustom01"
@@ -19,7 +19,7 @@
       <div class="col-md-4">
         <label for="validationCustom02" class="form-label">Sobrenome</label>
         <input
-          v-model="formDate.LastName"
+          v-model="formDate.lastName"
           type="text"
           class="form-control"
           id="validationCustom01"
@@ -31,7 +31,7 @@
           Número de telefone
         </label>
         <input
-          v-model="formDate.PhoneNumber"
+          v-model="formDate.phoneNumber"
           type="text"
           class="form-control"
           id="validationCustom02"
@@ -44,8 +44,7 @@
         </label>
         <div class="input-group has-validation">
           <input
-            autocomplete="off"
-            v-model="formDate.Email"
+            v-model="formDate.email"
             type="email"
             class="form-control"
             id="validationCustomUsername"
@@ -60,7 +59,7 @@
         </label>
         <div class="input-group has-validation">
           <input
-            v-model="formDate.Cpf"
+            v-model="formDate.cpf"
             type="email"
             class="form-control"
             id="validationCustomUsername"
@@ -74,7 +73,7 @@
           Data Nascimento
         </label>
         <input
-          v-model="formDate.BirthDate"
+          v-model="formDate.birthDate"
           type="date"
           class="form-control"
           id="validationCustom03"
@@ -87,7 +86,7 @@
         </label>
         <div class="input-group has-validation">
           <input
-            v-model="formDate.State"
+            v-model="formDate.state"
             type="text"
             class="form-control"
             id="validationCustomUsername"
@@ -99,7 +98,7 @@
       <div class="col-md-4">
         <label for="validationCustom05" class="form-label">Cidade</label>
         <input
-          v-model="formDate.City"
+          v-model="formDate.city"
           type="text"
           class="form-control"
           id="validationCustom05"
@@ -107,8 +106,8 @@
         />
       </div>
       <div class="col-12">
-        <button class="btn btn-primary" type="submit" @click="newClient()">
-          Criar Hospede
+        <button class="btn btn-primary" type="submit" @click="updateUser()">
+          Atualizar cadastro
         </button>
       </div>
     </form>
@@ -125,60 +124,54 @@ export default {
     return {
       statesGet: null,
       status: null,
-      msg:null,
+      msg: null,
       formDate: {
-        FirstName: null,
-        LastName: null,
-        State: null,
-        City: null,
-        Email: null,
-        PhoneNumber: null,
-        Cpf: null,
-        BirthDate: null,
+        firstName: null,
+        lastName: null,
+        state: null,
+        city: null,
+        email: null,
+        phoneNumber: null,
+        cpf: null,
+        birthDate: null,
       },
     }
   },
   mounted() {
     axios
-      .get('https://servicodados.ibge.gov.br/api/v1/localidades/estados')
+      .get(`https://localhost:7284/client/${this.$route.params.id}`, {
+        headers: {
+          Authorization: 'Access-Control-Allow-Origin',
+        },
+      })
       .then((response) => {
-        this.statesGet = response.data
+        this.formDate = response.data
+        console.log(this.formDate)
       })
   },
   methods: {
-    newClient() {
-      axios
-        .post('https://localhost:7284/client', this.formDate, {
-          headers: {
-            ContentType: 'application/json',
-          },
-        })
-        .then((response) => {
-          this.status = response.status
+    updateUser(){
+        axios
+      .put(`https://localhost:7284/client/${this.$route.params.id}`,
+      this.formDate,
+      {
+        headers: {
+          Authorization: 'Access-Control-Allow-Origin',
+        },
+      })
+      .then((response) => {
+          console.log(response.status);
+          this.status = response.status;
           if (this.status == 200) {
-            this.msg = `Cadastro realizado com sucesso.`
-            setTimeout(() => (this.msg = null), 2000)
+            this.msg = `Cadastro atualizado com sucesso.`;
+            setTimeout(() => (this.msg = null), 2000);
           }
-          //limpa os inputs
-          setTimeout(
-            () => (
-              (this.formDate.FirstName = null),
-              (this.formDate.LastName = null),
-              (this.formDate.Email = null),
-              (this.formDate.City = null),
-              (this.formDate.State = null),
-              (this.formDate.PhoneNumber = null),
-              (this.formDate.Cpf = null),
-              (this.formDate.BirthDate = null)
-            ),
-            2000,
-          )
-        })
-    },
+        });
+    }
   },
   components: {
     MessageConfirm,
-  }
+  },
 }
 </script>
 

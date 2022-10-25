@@ -3,6 +3,7 @@ import HomeView from '../views/HomeView.vue'
 import ViewClient from '../views/ViewClient.vue'
 import ViewRoom from '../views/ViewRoom.vue'
 import CreateClient from '../views/CreateClient.vue'
+import EditClient from '../views/EditClient.vue'
 
 const routes = [
   {
@@ -24,6 +25,12 @@ const routes = [
     path: '/new_client',
     name: 'createclient',
     component: CreateClient
+  },
+  {
+    path: '/edit/:id',
+    name: 'edit',
+    component: EditClient,
+    props: {default: true, sidebar: false}
   },
  
 
