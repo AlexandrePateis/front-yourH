@@ -2,7 +2,9 @@
   <ViewLoading :isLoading="loaded" />
   <div>
     <div class="actions-req">
-      <router-link to="/new_client" class="btn btn-primary">Novo hospede</router-link >
+      <router-link to="/new_client" class="btn btn-primary">
+        Novo hospede
+      </router-link>
     </div>
     <table class="table">
       <thead class="table-light">
@@ -19,11 +21,11 @@
       <tbody>
         <tr v-for="item in info" :key="item.id">
           <th scope="row">{{ item.id }}</th>
-          <td>{{ item.firstName }} {{item.lastName}}</td>
+          <td>{{ item.firstName }} {{ item.lastName }}</td>
           <td>{{ item.email }}</td>
-          <td>{{item.cpf}}</td>
-          <td>{{item.phoneNumber}}</td>
-          <td>{{item.city}} - {{item.state}}</td>
+          <td>{{ item.cpf }}</td>
+          <td>{{ item.phoneNumber }}</td>
+          <td>{{ item.city }} - {{ item.state }}</td>
           <td>
             <div class="btn-options">
               <button class="btn btn-primary" @click="EditAction(item.id)">
@@ -35,105 +37,106 @@
                 class="myButton btn btn-danger"
                 data-bs-toggle="modal"
                 data-bs-target="#staticBackdrop"
+                @click="GetId(item.id)"
               >
                 Delete
               </button>
               <i class="fa-solid fa-eye"></i>
 
               <!-- Modal -->
-              <div
-                class="modal fade"
-                id="staticBackdrop"
-                data-bs-backdrop="static"
-                data-bs-keyboard="false"
-                tabindex="-1"
-                aria-labelledby="staticBackdropLabel"
-                aria-hidden="true"
-              >
-                <div class="modal-dialog">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title" id="staticBackdropLabel">
-                        Tem certeza que deseja excluir ?
-                      </h5>
-                      <button
-                        type="button"
-                        class="btn-close"
-                        data-bs-dismiss="modal"
-                        aria-label="Close"
-                      ></button>
-                    </div>
-                    <div class="modal-body">
-                      Essa ação não poderá ser desfeita!
-                    </div>
-                    <div class="modal-footer">
-                      <button
-                        type="button"
-                        class="btn btn-secondary"
-                        data-bs-dismiss="modal"
-                      >
-                        Close
-                      </button>
-                      <button
-                        type="button"
-                        class="btn btn-danger"
-                        @click="DeletUser(item.id)"
-                      >
-                        Excluir
-                      </button>
-                      
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
           </td>
         </tr>
       </tbody>
     </table>
+    <div
+      class="modal fade"
+      id="staticBackdrop"
+      data-bs-backdrop="static"
+      data-bs-keyboard="false"
+      tabindex="-1"
+      aria-labelledby="staticBackdropLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="staticBackdropLabel">
+              Tem certeza que deseja excluir ?
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            Essa ação não poderá ser desfeita!
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+            <button type="button" class="btn btn-danger" @click="DeletUser()">
+              Excluir
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import axios from "axios";
+import axios from 'axios'
 import ViewLoading from '../components/ViewLoading.vue'
 export default {
   name: 'ViewClient',
-  data(){
-    return{
+  data() {
+    return {
       info: null,
       loaded: null,
-    };
+      selecIdUser: null,
+    }
   },
-  mounted(){
-    axios.get("https://localhost:7284/client",{
-      headers:{
-        Authorization: 'Access-Control-Allow-Origin',
-      }
-    })
-    .then((response) => {
-      this.info = response.data;
-      console.log(this.info);
-      this.loaded = false;
-    })
-    
+  mounted() {
+    axios
+      .get('https://localhost:7284/client', {
+        headers: {
+          Authorization: 'Access-Control-Allow-Origin',
+        },
+      })
+      .then((response) => {
+        this.info = response.data
+        console.log(this.info)
+        this.loaded = false
+      })
   },
-  methods:{
-    EditAction(id){
-      this.$router.push({ name: "edit", params: { id: id } });
+  methods: {
+    EditAction(id) {
+      this.$router.push({ name: 'edit', params: { id: id } })
     },
-    DeletUser(id){
+    GetId(id) {
+      this.selecIdUser = id
+    },
+    DeletUser() {
       axios
-        .delete(`https://localhost:7284/client/${id}`, {
+        .delete(`https://localhost:7284/client/${this.selecIdUser}`, {
           headers: {
             Authorization: 'Access-Control-Allow-Origin',
+            ContentType: 'application/json',
           },
         })
         .then((response) => {
-          this.info = response.data;
-          window.location.reload();
-        });
-    }
+          this.info = response.data
+          window.location.reload()
+        })
+    },
   },
   components: {
     ViewLoading,
@@ -142,25 +145,25 @@ export default {
 </script>
 
 <style>
-.table{
+.table {
   width: 70%;
   margin: 0 auto;
   margin-top: 3em;
 }
-.actions-req{
+.actions-req {
   width: 70%;
   margin: 0 auto;
   margin-top: 1em;
 }
-.btn-options{
+.btn-options {
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
   text-align: center;
-  gap:4px;
+  gap: 4px;
 }
-.btn{
+.btn {
   font-size: 14px !important;
 }
 </style>
