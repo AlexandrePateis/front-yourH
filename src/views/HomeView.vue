@@ -1,14 +1,28 @@
 <template>
   <div class="home">
-    <h1>Rota Home</h1>
+    <div class="cardsdash">
+      <CardDashboard />
+    </div>
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
+import CardDashboard from '@/components/CardDashboard.vue'
 
 export default {
   name: 'HomeView',
-  components: {},
+  components: {
+    CardDashboard,
+  },
 }
 </script>
+
+<style>
+.cardsdash{
+  display: flex;
+  justify-content: center;
+  gap: 2em;
+  margin-top: 0;
+}
+</style>
